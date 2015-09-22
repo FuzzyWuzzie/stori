@@ -2,9 +2,9 @@
   "name": "stori",
   "version": "1.0.0",
   "description": "stori is a tool to create, manage, and share storyboards",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node app.js"
   },
   "author": "Kenton Hamaluik",
   "license": "MIT",
