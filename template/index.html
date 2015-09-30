@@ -16,16 +16,16 @@
   <script type="text/javascript" src="js/stori.js"></script>
 </head>
 <body>
+  <nav>
+    <ul>
+      <li><a ui-sref="home">Home</a></li>
+      <li><a ui-sref="projects">Projects</a></li>
+    </ul>
+  </nav>
   <div class="container">
-    <nav>
-        <ul>
-          <li><a ui-sref="login">Intro</a></li>
-          <li><a ui-sref="projects">Projects</a></li>
-        </ul>
-    </nav>
     <div class="row">
       <div class="twelve columns">
-       <div ui-view></div>
+        <div ui-view></div>
       </div>
     </div>
   </div>
