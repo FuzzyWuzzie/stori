@@ -1,10 +1,12 @@
+var bcrypt = require('bcryptjs');
+
 module.exports = {
 	Models: function(sequelize, Sequelize) {
 		var User = sequelize.define('user', {
-		    username:       { type: Sequelize.STRING,  allowNull: false, unique: true   },
-		    email:          { type: Sequelize.STRING,  allowNull: false, unique: true   },
-		    userlevel:      { type: Sequelize.INTEGER, allowNull: false, defaultValue: 0 },
-		    password:       {
+		    name:      { type: Sequelize.STRING,  allowNull: false, unique: true   },
+		    email:     { type: Sequelize.STRING,  allowNull: false, unique: true   },
+		    userlevel: { type: Sequelize.INTEGER, allowNull: false, defaultValue: 0 },
+		    password:  {
 		        type: Sequelize.STRING,
 		        set: function(v) {
 		            var salt = bcrypt.genSaltSync(10);

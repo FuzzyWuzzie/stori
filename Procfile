@@ -1,1 +1,1 @@
-web: node stori.js
+web: node server.js
