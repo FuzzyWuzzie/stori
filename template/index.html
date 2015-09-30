@@ -9,16 +9,22 @@
   <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/skeleton.css">
+  <link rel="stylesheet" href="css/stori.css">
   <link rel="icon" type="image/png" href="images/favicon.png">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.6/angular.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.6/angular-route.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.min.js"></script>
   <script type="text/javascript" src="js/stori.js"></script>
 </head>
-<body ng-controller="mainController">
+<body>
+  <nav>
+    <ul>
+      <li><a ui-sref="home">Home</a></li>
+    </ul>
+  </nav>
   <div class="container">
     <div class="row">
-      <div class="twelve columns" style="margin-top: 25%">
-        {{ message }}
+      <div class="twelve columns">
+        <div ui-view></div>
       </div>
     </div>
   </div>
