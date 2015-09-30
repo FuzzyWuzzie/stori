@@ -1,24 +1,31 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="storiApp">
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8"/>
   <title>Stori</title>
-  <meta name="description" content="Billings for the VRC at the University of Alberta">
-  <meta name="author" content="Kenton Hamaluik">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
-  <link rel="stylesheet" href="css/normalize.css">
-  <link rel="stylesheet" href="css/skeleton.css">
-  <link rel="icon" type="image/png" href="images/favicon.png">
+  <meta name="description" content="Storyboarding Utility"/>
+  <meta name="author" content="Kenton Hamaluik"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css"/>
+  <link rel="stylesheet" href="css/normalize.css"/>
+  <link rel="stylesheet" href="css/skeleton.css"/>
+  <link rel="stylesheet" href="css/stori.css"/>
+  <link rel="icon" type="image/png" href="images/favicon.png"/>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.6/angular.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.6/angular-route.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.min.js"></script>
   <script type="text/javascript" src="js/stori.js"></script>
 </head>
-<body ng-controller="mainController">
+<body>
   <div class="container">
+    <nav>
+        <ul>
+          <li><a ui-sref="login">Intro</a></li>
+          <li><a ui-sref="projects">Projects</a></li>
+        </ul>
+    </nav>
     <div class="row">
-      <div class="one column" style="margin-top: 25%">
-        {{ message }}
+      <div class="twelve columns">
+       <div ui-view></div>
       </div>
     </div>
   </div>
