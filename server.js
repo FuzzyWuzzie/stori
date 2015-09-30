@@ -39,17 +39,17 @@ var router = express.Router();
 router.use(jsonError);
 
 router.route('/projects')
-  .post(authController.isAuthenticated, projectController.postProjects)
-  .get(authController.isAuthenticated, projectController.getProjects);
+  .post(authController.IsAuthenticated, projectController.postProjects)
+  .get(authController.IsAuthenticated, projectController.getProjects);
   
 router.route('/project/:project_id')
-  .get(authController.isAuthenticated, projectController.getProject)
-  .put(authController.isAuthenticated, projectController.putProject)
-  .delete(authController.isAuthenticated, projectController.deleteProject);
+  .get(authController.IsAuthenticated, projectController.getProject)
+  .put(authController.IsAuthenticated, projectController.putProject)
+  .delete(authController.IsAuthenticated, projectController.deleteProject);
   
 router.route('/users')
   .post(userController.postUsers)
-  .get(authController.isAuthenticated, userController.getUsers);
+  .get(authController.IsAuthenticated, authController.HasLevel(2), userController.getUsers);
 
 // Register all our routes with /api
 app.use('/api', router);

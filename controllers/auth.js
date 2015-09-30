@@ -30,6 +30,24 @@ module.exports = function(userModel) {
 	));
 	
 	return {
-		isAuthenticated: passport.authenticate('basic', { session: false })
+		IsAuthenticated: passport.authenticate('basic', { session: false }),
+		HasLevel: function(level) {
+			return function(req, res, next) {
+				userModel.findOne({
+					where: {
+						id: req.user.id
+					}
+				}).then(function(user) {
+					if(!user.HasLevel(level)) {
+				      res.send(401);
+					}
+					else {
+						next();
+					}
+				}).catch(function(err) {
+					return next(err);
+				});
+			}
+		}
 	};
 }
