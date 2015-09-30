@@ -1,7 +1,7 @@
-module.exports = function(models) {
+module.exports = function(userModel) {
 	return {
 		postUsers: function(req, res, next) {
-		  models.User.create({
+		  userModel.create({
 		    name: req.body.name,
 		    email: req.body.email,
 		    userlevel: 0,
@@ -17,7 +17,7 @@ module.exports = function(models) {
 		
 		// TODO: remove after development!!!
 		getUsers: function(req, res, next) {
-		  models.User.findAll().then(function(users) {
+		  userModel.findAll().then(function(users) {
 		    res.json(users);
 		  }).catch(function(err) {
 		    next(err);

@@ -1,7 +1,7 @@
-module.exports = function(models) {
+module.exports = function(projectModel) {
 	return {
 		postProjects: function(req, res, next) {
-		  models.Project.create({
+		  projectModel.create({
 		    name: req.body.name,
 		    description: req.body.description
 		  }).then(function(project) {
@@ -15,7 +15,7 @@ module.exports = function(models) {
 		},
 		
 		getProjects: function(req, res, next) {
-		  models.Project.findAll().then(function(projects) {
+		  projectModel.findAll().then(function(projects) {
 		    res.json(projects);
 		  }).catch(function(err) {
 		    next(err);
@@ -23,7 +23,7 @@ module.exports = function(models) {
 		},
 		
 		getProject: function(req, res, next) {
-		  models.Project.findById(req.params.project_id).then(function(project) {
+		  projectModel.findById(req.params.project_id).then(function(project) {
 		    res.json(project);
 		  }).catch(function(err) {
 		    next(err);
@@ -31,9 +31,9 @@ module.exports = function(models) {
 		},
 		
 		putProject: function(req, res, next) {
-		  models.Project.findById(req.params.project_id).then(function(project) {
+		  projectModel.findById(req.params.project_id).then(function(project) {
 		    if(project) {
-		      models.Project.update({
+		      projectModel.update({
 		        name: req.body.name ? req.body.name : project.name,
 		        description: req.body.description ? req.body.description : project.description
 		      }, {
@@ -42,7 +42,7 @@ module.exports = function(models) {
 		        }
 		      }).then(function(rows) {
 		        if(rows[0] == 1) {
-		          models.Project.findById(req.params.project_id).then(function(project) {
+		          projectModel.findById(req.params.project_id).then(function(project) {
 		            res.json(project);
 		          }).catch(function(err) {
 		            next(err);
@@ -64,9 +64,9 @@ module.exports = function(models) {
 		},
 		
 		deleteProject: function(req, res, next) {
-		  models.Project.findById(req.params.project_id).then(function(project) {
+		  projectModel.findById(req.params.project_id).then(function(project) {
 		    if(project) {
-		      models.Project.destroy({
+		      projectModel.destroy({
 		        where: {
 		          id: req.params.project_id
 		        }
