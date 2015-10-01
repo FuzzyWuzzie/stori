@@ -19,6 +19,7 @@ var sequelize = new Sequelize('stori', '', '', {
 // load the database models
 var userModel = require('./models/user.js')(sequelize, Sequelize);
 var projectModel = require('./models/project.js')(sequelize, Sequelize);
+var userProjectModel = require('./models/user_project.js')(userModel, projectModel);
 
 // load the controllers
 var userController = require('./controllers/users.js')(userModel);
