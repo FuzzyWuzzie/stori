@@ -62,6 +62,10 @@ router.route('/users')
 	.post(userController.postUsers)
 	.get(authController.IsAuthenticated, authController.HasLevel(2), userController.getUsers);
 
+// individual user
+router.route('/users/:user_id')
+	.get(authController.IsAuthenticated, userController.getUser);
+
 // register all the routes to the API
 app.use('/api/v1', router);
 

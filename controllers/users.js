@@ -22,6 +22,14 @@ module.exports = function(userModel) {
 			}).catch(function(err) {
 				next(err);
 			});
-		}
+		},
+		
+		getUser: function(req, res, next) {
+			userModel.findById(req.params.user_id).then(function(user) {
+				res.json(user);
+			}).catch(function(err) {
+				next(err);
+			})
+		},
 	};
 }
