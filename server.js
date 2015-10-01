@@ -19,12 +19,14 @@ var sequelize = new Sequelize('stori', '', '', {
 // load the database models
 var userModel = require('./models/user.js')(sequelize, Sequelize);
 var projectModel = require('./models/project.js')(sequelize, Sequelize);
-var userProjectModel = require('./models/user_project.js')(userModel, projectModel);
+require('./models/user_project.js')(userModel, projectModel);
+var refreshTokenModel = require('./models/refreshtoken.js')(sequelize, Sequelize);
+require('./models/user_refreshtoken.js')(userModel, refreshTokenModel);
 
 // load the controllers
+var authController = require('./controllers/auth.js')(userModel, refreshTokenModel);
 var userController = require('./controllers/users.js')(userModel);
 var projectController = require('./controllers/projects.js')(projectModel);
-var authController = require('./controllers/auth.js')(userModel);
 
 // initialize the server
 var app = express();
@@ -45,6 +47,10 @@ router.use(function(err, req, res, next) {
 // JWT login
 router.route('/auth')
 	.post(authController.postAuth);
+
+// Refresh tokens
+router.route('/auth/refresh')
+	.post(authController.postRefresh);
 
 // projects
 router.route('/projects')
