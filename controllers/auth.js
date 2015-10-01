@@ -1,53 +1,58 @@
 // load required packages
 var passport = require('passport');
-var BasicStrategy = require('passport-http').BasicStrategy;
+var JwtStrategy = require('passport-jwt').Strategy;
+var jwt = require('jsonwebtoken');
 
 module.exports = function(userModel) {
-	passport.use(new BasicStrategy(
-		function(username, password, callback) {
+	passport.use(new JwtStrategy({
+		secretOrKey: 'puppies', // TODO: use a more secure key
+		issuer: 'stori'
+	},
+	function(payload, done) {
+		if(payload.id == undefined || payload.userlevel == undefined) {
+			return done(JSON.stringify({ message: "ERROR: Invalid JWT payload!", payload: payload }), false);
+		}
+		return done(null, {
+			id: payload.id,
+			level: payload.userlevel
+		});
+	}));
+	
+	return {
+		IsAuthenticated: passport.authenticate('jwt', { session: false }),
+		HasLevel: function(level) {
+			return function(req, res, next) {
+				if(req.user.level >= level) return next();
+				return res.sendStatus(401);
+			};
+		},
+		postAuth: function(req, res, next) {
 			userModel.findOne({
 				where: {
-					name: username
+					name: req.body.name
 				}
 			}).then(function(user) {
 				// no user found with that username
-				if(!user) { return callback(null, false); }
+				if(!user) { return res.sendStatus(401); }
 				
 				// make sure the password is correct
-				user.VerifyPassword(password, function(err, isMatch) {
-					if(err) { return callback(err); }
+				user.VerifyPassword(req.body.password, function(err, isMatch) {
+					if(err) { return next(err); }
 					
 					// password did not match
-					if(!isMatch) { return callback(null, false); }
+					if(!isMatch) { return res.sendStatus(401); }
 					
 					// success!
-					return callback(null, user);
+					res.json({
+						access_token: jwt.sign(
+							{ id: user.id, userlevel: user.userlevel },
+							'puppies',
+							{ issuer: 'stori', expiresInMinutes: 60 })
+					});
 				});
 			}).catch(function(err) {
-				return callback(err);
+				return next(err);
 			});
-		}
-	));
-	
-	return {
-		IsAuthenticated: passport.authenticate('basic', { session: false }),
-		HasLevel: function(level) {
-			return function(req, res, next) {
-				userModel.findOne({
-					where: {
-						id: req.user.id
-					}
-				}).then(function(user) {
-					if(!user.HasLevel(level)) {
-				      res.send(401);
-					}
-					else {
-						next();
-					}
-				}).catch(function(err) {
-					return next(err);
-				});
-			}
-		}
+		},
 	};
 }
