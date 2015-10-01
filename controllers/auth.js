@@ -10,20 +10,18 @@ module.exports = function(userModel, refreshTokenModel) {
 		issuer: 'stori'
 	},
 	function(payload, done) {
-		if(payload.id == undefined || payload.userlevel == undefined) {
+		if(payload.id == undefined ) {
 			return done(JSON.stringify({ message: "ERROR: Invalid JWT payload!", payload: payload }), false);
 		}
 		return done(null, {
-			id: payload.id,
-			level: payload.userlevel
+			id: payload.id
 		});
 	}));
 
-	var generateJWTToken = function(id, level, refreshToken) {
+	var generateJWTToken = function(id, refreshToken) {
 		return jwt.sign({
 			id: id,
-			lvl: level,
-			refresh: refreshToken
+			ref: refreshToken
 		},
 		'puppies',
 		{
@@ -53,7 +51,6 @@ module.exports = function(userModel, refreshTokenModel) {
 				return res.json({
 					access_token: generateJWTToken(
 						user.id,
-						user.level,
 						generateRefreshToken(refreshToken.uuid))
 				});
 			}).catch(function(err) {
@@ -67,10 +64,11 @@ module.exports = function(userModel, refreshTokenModel) {
 	return {
 		IsAuthenticated: passport.authenticate('jwt', { session: false }),
 		HasLevel: function(level) {
-			return function(req, res, next) {
+			/*return function(req, res, next) {
 				if(req.user.level >= level) return next();
 				return res.sendStatus(401);
-			};
+			};*/
+			return function(req, res, next) { return res.sendStatus(401); };
 		},
 		postAuth: function(req, res, next) {
 			userModel.findOne({
