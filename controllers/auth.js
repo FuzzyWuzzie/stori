@@ -10,33 +10,30 @@ module.exports = function(userModel, refreshTokenModel) {
 		issuer: 'stori'
 	},
 	function(payload, done) {
-		if(payload.id == undefined ) {
+		if(payload.id == undefined || payload.ul == undefined) {
 			return done(JSON.stringify({ message: "ERROR: Invalid JWT payload!", payload: payload }), false);
 		}
 		return done(null, {
-			id: payload.id
+			id: payload.id,
+			ul: payload.ul
 		});
 	}));
 
-	var generateJWTToken = function(id, refreshToken) {
-		return jwt.sign({
+	var generateJWTToken = function(id, userLevel, refreshToken) {
+		var payload = {
 			id: id,
+			ul: (!userLevel || userLevel == undefined || isNaN(userLevel)) ? 0 : userLevel,
 			ref: refreshToken
-		},
-		'puppies',
-		{
-			issuer: 'stori', expiresInMinutes: 5
-		});
+		};
+		/*console.log('userLevel: "%d"', userLevel);
+		console.log('Payload JSON: %j', payload);
+		console.log('Payload stringified: %s', JSON.stringify(payload));*/
+
+		return jwt.sign(payload, 'puppies', { issuer: 'stori', expiresInMinutes: 5 });
 	};
 
 	var generateRefreshToken = function(uuid) {
-		return jwt.sign({
-			uuid: uuid
-		},
-		'doggies',
-		{
-			issuer: 'stori'
-		});
+		return jwt.sign({ uuid: uuid }, 'doggies', { issuer: 'stori' });
 	};
 
 	var deliverAuthToken = function(res, user, next) {
@@ -51,6 +48,7 @@ module.exports = function(userModel, refreshTokenModel) {
 				return res.json({
 					access_token: generateJWTToken(
 						user.id,
+						user.level,
 						generateRefreshToken(refreshToken.uuid))
 				});
 			}).catch(function(err) {
@@ -64,11 +62,10 @@ module.exports = function(userModel, refreshTokenModel) {
 	return {
 		IsAuthenticated: passport.authenticate('jwt', { session: false }),
 		HasLevel: function(level) {
-			/*return function(req, res, next) {
-				if(req.user.level >= level) return next();
+			return function(req, res, next) {
+				if(req.user.ul >= level) return next();
 				return res.sendStatus(401);
-			};*/
-			return function(req, res, next) { return res.sendStatus(401); };
+			};
 		},
 		postAuth: function(req, res, next) {
 			userModel.findOne({
